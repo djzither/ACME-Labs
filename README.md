@@ -1,6 +1,6 @@
-# ACME ${VOLUME} Semester Lab Assignment
+# ACME Volume 1 First Semester Lab Assignment
 
-Welcome to your ACME lab repository! This repo contains your starter code and files for the ${VOLUME} Semester labs.
+Welcome to your ACME lab repository! This repo contains your starter code and files for the Volume 1 First Semester labs.
 
 ## Lab Content & Instructions
 
