@@ -84,3 +84,20 @@ htmlcov/
 *.jpeg
 
 # Lab data files --------------------------------------------------------------
+Exceptions_FileIO/cf_example1.txt
+Exceptions_FileIO/cf_example2.txt
+Exceptions_FileIO/hello_world.txt
+FourierTransform/mystery_chord.wav
+FourierTransform/tada.wav
+ImageSegmentation/HeartMatrixA.npz
+ImageSegmentation/HeartMatrixD.npy
+ImageSegmentation/blue_heart.png
+ImageSegmentation/dream.png
+ImageSegmentation/dream_gray.png
+LeastSquares_Eigenvalues/circle.npy
+LeastSquares_Eigenvalues/ellipse.npy
+LeastSquares_Eigenvalues/housing.npy
+LinearTransformations/horse.npy
+NumpyIntro/grid.npy
+SVD_ImageCompression/hubble.jpg
+SVD_ImageCompression/hubble_gray.jpg
