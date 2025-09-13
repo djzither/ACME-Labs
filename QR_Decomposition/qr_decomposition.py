@@ -198,7 +198,7 @@ if __name__ == "__main__":
     A = np.random.random((8, 8))
     H, Q = la.hessenberg(A, calc_q=True)
 
-    # Verify that H has all zeros below the first subdiagonal and QHQ\trp = A.
+    # Verify that H has all zeros below
     np.allclose(np.triu(H, -1), H)
     True
     np.allclose(Q @ H @ Q.T, A)
