@@ -1,0 +1,50 @@
+09/19/25 23:17
+
+Problem 1 (5 points):
+prob1() failed
+Score += 0
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+TypeError: Invalid return type 'Float64DType'
+
+Problem 4 (5 points):
+Score += 5
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+Score += 10
+
+Problem 7 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 40/50 = 80.0%
+
+Linter Notes: 
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:14:21: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:63:28: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:68:62: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:68:79: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:83:37: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:83:39: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:113:29: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:113:32: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:21: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:23: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:26: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:29: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:31: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:34: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:37: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/NumpyIntro/numpy_intro.py:115:39: E231 missing whitespace after ','
+
+
+-------------------------------------------------------------------------------
+
