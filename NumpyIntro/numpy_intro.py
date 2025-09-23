@@ -11,7 +11,7 @@ import numpy as np
 def prob1():
     """ Define the matrices A and B as arrays. Return the matrix product AB. """
     # we make matrices and multiply them
-    A = np.array([[3,-1, 4], [1, 5, 9]])
+    A = np.array([[3,-1, 4], [1, 5, -9]])
     B = np.array([[2, 6, -5, 3], [5, -8, 9, 7], [9, -3, -2, -3]])
     return A @ B
 
@@ -33,7 +33,7 @@ def prob3():
     B = np.where(np.tril(np.ones((7, 7), dtype=bool)), -1, B_5)
     # do some operations
     Final = A @ B @ A
-    return Final
+    return Final.astype(np.int64)
 
 def prob4(A):
     """ Make a copy of 'A' and use fancy indexing to set all negative entries of
