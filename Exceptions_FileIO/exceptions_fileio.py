@@ -181,11 +181,13 @@ class ContentFilter(object):
         Whitespace characters:  <The number of spaces, tabs, and newlines>
         Number of lines:        <The number of lines>
         """
+        #gonna do all the actions we need
         total_chars = len(self.contents)
         letters = sum(c.isalpha() for c in self.contents)
         digits = sum(c.isdigit() for c in self.contents)
         whitespace = sum(c.isspace() for c in self.contents)
         num_lines = len(self.contents.splitlines())
+        #this gives the output for string
         return(f"Source file: {self.filename}\n"
         f"Total Characters: {total_chars}\n"
         f"Alphabetic characters {letters}\n"
