@@ -58,11 +58,6 @@ def line_fit(dataset="housing.npy"):
     plt.legend()
     plt.savefig("housingprices.png")
 
-    
-
-    
-
-
 # Problem 3
 def polynomial_fit(dataset="housing.npy"):
     """Find the least squares polynomials of degree 3, 6, 9, and 12 that relate
@@ -123,7 +118,6 @@ def ellipse_fit(dataset="ellipse.npy"):
 
     params = la.lstsq(A, b)[0]
 
-
     plt.scatter(x, y, label = "Data Points")
     plot_ellipse(*params)
     plt.legend()
@@ -132,8 +126,6 @@ def ellipse_fit(dataset="ellipse.npy"):
     plt.ylabel("y")
     
     plt.savefig("ellipse_fit.png")
-
-
 
 # Problem 5
 def power_method(A, N=20, tol=1e-12):
@@ -164,9 +156,6 @@ def power_method(A, N=20, tol=1e-12):
         x = x/la.norm(x)
     #gives dom eig val and vect
     return x.T @ A @ x, x
-
-
-
 
 # Problem 6
 def qr_algorithm(A, N=50, tol=1e-12):
@@ -206,12 +195,4 @@ def qr_algorithm(A, N=50, tol=1e-12):
             eigs.extend([root1, root2])
             i += 2 #2 rows this time
     return np.array(eigs)
-        
 
-
-if __name__ == "__main__":
-   
-    line_fit()
-    polynomial_fit()
-    ellipse_fit()
-   
