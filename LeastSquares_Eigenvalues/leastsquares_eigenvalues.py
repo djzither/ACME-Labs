@@ -11,6 +11,7 @@ from scipy import linalg as la
 from matplotlib import pyplot as plt
 
 
+
 # Problem 1
 def least_squares(A, b):
     """Calculate the least squares solutions to Ax = b by using the QR
@@ -23,7 +24,13 @@ def least_squares(A, b):
     Returns:
         x ((n, ) ndarray): The solution to the normal equations.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    #we are doing qr decomp with scipy
+    Q, R = la.qr(A, mode="economic")
+
+    #going to figure out the answer
+    Qtb = Q.T @ b
+    x = la.solve_triangular(R, Qtb)
+    return x
 
 # Problem 2
 def line_fit(dataset="housing.npy"):
@@ -31,7 +38,29 @@ def line_fit(dataset="housing.npy"):
     index for the data in housing.npy. Plot both the data points and the least
     squares line.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    data = np.load(dataset)
+    years = data[:, 0] 
+    prices = data[:, 1]
+
+    #making the A matrix to solve
+    A = np.column_stack((years, np.ones_like(years)))
+    b = prices
+
+    #we are going to plot it
+    beta = least_squares(A, b)
+    slope, intercept = beta
+    plt.scatter(years, prices, label="Housing price data")
+    x_line = np.linspace(years.min(), years.max(), 100)
+    y_line = slope * x_line + intercept
+    plt.plot(x_line, y_line, "r-", label = "Least squares line")
+    plt.xlabel("year (0 = 2000)")
+    plt.ylabel("housing price index")
+    plt.legend()
+    plt.savefig("housingprices.png")
+
+    
+
+    
 
 
 # Problem 3
@@ -40,8 +69,32 @@ def polynomial_fit(dataset="housing.npy"):
     the year to the housing price index for the data in housing.npy. Plot both
     the data points and the least squares polynomials in individual subplots.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    data = np.load(dataset)
+    years = data[:, 0]
+    housing_price = data[:, 1]
+    refined_dom = np.linspace(years.min(), years.max(), 400)
 
+    plt.cla()
+
+    degrees = [3, 6, 9, 12]
+    for i, deg in enumerate(degrees):
+        #this is the A vandermonde matrix
+        A = np.vander(years, deg + 1, increasing=True)
+        #solve least sqr
+        coeffs = la.lstsq(A, housing_price)[0]
+        #find the dence points to eval at
+        A_dense = np.vander(refined_dom, deg + 1, increasing = True)
+        y_fit = A_dense @ coeffs
+        
+        plt.subplot(2, 2, i+1)
+        plt.scatter(years, housing_price, label = "Data")
+        plt.plot(refined_dom, y_fit, label = f"degree {deg}")
+        plt.title(f"least squares fit with degree: {deg}")
+        plt.xlabel("Year")
+        plt.xlabel("year")
+        plt.legend()
+    plt.tight_layout()
+    plt.savefig("least squares better.png")
 
 def plot_ellipse(a, b, c, d, e):
     """Plot an ellipse of the form ax^2 + bx + cxy + dy + ey^2 = 1."""
@@ -60,11 +113,31 @@ def ellipse_fit(dataset="ellipse.npy"):
     ellipse.npy. Plot the original data points and the ellipse together, using
     plot_ellipse() to plot the ellipse.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    plt.cla()
+    data = np.load(dataset)
+    x = data[:, 0]
+    y = data[:, 1]
+    #make matrix
+    A = np.column_stack((x**2, x, x*y, y, y**2))
+    b = np.ones_like(x)
+
+    params = la.lstsq(A, b)[0]
+
+
+    plt.scatter(x, y, label = "Data Points")
+    plot_ellipse(*params)
+    plt.legend()
+    plt.title("ellipse fit")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+    plt.savefig("ellipse_fit.png")
+
 
 
 # Problem 5
 def power_method(A, N=20, tol=1e-12):
+    
     """Compute the dominant eigenvalue of A and a corresponding eigenvector
     via the power method.
 
@@ -78,7 +151,21 @@ def power_method(A, N=20, tol=1e-12):
         ((n,) ndarray): An eigenvector corresponding to the dominant
             eigenvalue of A.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    #get matrix size
+    m, n = np.shape(A)
+    #chooses the vector needed for power method
+    x = np.random.rand(n)
+    x = x/la.norm(x)
+    
+    for k in range(N):
+        #current vector by A
+        x = A @ x
+        #normalize
+        x = x/la.norm(x)
+    #gives dom eig val and vect
+    return x.T @ A @ x, x
+
+
 
 
 # Problem 6
@@ -94,4 +181,37 @@ def qr_algorithm(A, N=50, tol=1e-12):
     Returns:
         ((n,) ndarray): The eigenvalues of A.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    m, n = np.shape(A)
+    S = la.hessenberg(A)
+
+    for _ in range(N):
+        Q, R = la.qr(S)
+        S = R @ Q
+    eigs = []
+    i = 0
+    while i < n:
+        if i == n-1 or abs(S[i+1, i]) < tol:
+            #get these eigan vals
+            eigs.append(S[i, i])
+            i += 1
+        # 2x2 eig vals == hard!!
+        else:
+            a, b, c, d = S[i, i+1], S[i+1, i], S[i+1, i+1]
+            trace = a + d
+            det = a * d - b * c
+            disc = trace**2 - 4 * det
+            #eig vals
+            root1 = (trace + sqrt(disc)) / 2
+            root2 = (trace - sqrt(disc)) / 2
+            eigs.extend([root1, root2])
+            i += 2 #2 rows this time
+    return np.array(eigs)
+        
+
+
+if __name__ == "__main__":
+   
+    line_fit()
+    polynomial_fit()
+    ellipse_fit()
+   

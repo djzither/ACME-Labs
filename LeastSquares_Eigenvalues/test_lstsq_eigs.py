@@ -9,8 +9,10 @@ def test_qr_algorithm():
     """
     Write at least one unit test for problem 6, the qr algorithm function.
     """
-    raise NotImplementedError("No code written for problem 6 unit test!!")
-
+    A = np.diag([1, 2, 3])
+    eig_vals = lstsq_eigs.qr_algorithm(A)
+    expected = np.array([1, 2, 3])
+    assert np.allclose(sorted(eig_vals), sorted(expected), atol=1e-10)
 def test_power_method():
     #Sets up test cases
     A = np.array([[1, 1], [1, 1]])
