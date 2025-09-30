@@ -76,7 +76,7 @@ class Backpack:
 def test_backpack():
 
     test_pack = []
-    test_pack = Backpack("Derek","black", 5)
+    test_pack = Backpack("Derek", "black", 5)
 
     if test_pack.name != "Derek":
         print("Backpack.name assigned not correctly")
@@ -148,7 +148,7 @@ class Knapsack(Backpack):
 # Problem 2: Write a 'Jetpack' class that inherits from the 'Backpack' class.
 class Jetpack(Backpack):
     
-    def __init__(self, name, color, max_size = 2, fuel = 10):
+    def __init__(self, name, color, max_size=2, fuel=10):
         """__init__  makes a jetpack with a name, color and fuel, and then it assigns with the old 
         backpack class """
         #over rides backpack and makes it better for jetpack
@@ -235,8 +235,6 @@ def test_ComplexNumber(a, b):
     Runs a set of operations and checks results match exactly.
     """
     py_cnum1 = complex(a, b)
-    py_cnum2 = complex(a, b)
-
     my_cnum1 = ComplexNumber(a, b)
     my_cnum2 = ComplexNumber(a, b)
 
