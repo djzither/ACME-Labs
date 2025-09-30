@@ -49,7 +49,6 @@ def arithmagic():
     #see if they reversed it correctly
     if step_4 != reversed_difference:
         raise ValueError("The reverse of the difference you entered is not correct")
-
     final = int(step_3) + int(step_4)
     
     if final != 1089:

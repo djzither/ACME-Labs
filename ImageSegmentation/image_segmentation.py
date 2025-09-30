@@ -22,7 +22,11 @@ def laplacian(A):
     Returns:
         L ((N,N) ndarray): The Laplacian matrix of G.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    #gets the weights of everything leaving each node represented by a new row
+    degrees = np.sum(A, axis=1)
+    degree_matrix = np.diag(degrees)
+    laplacian_m = degree_matrix - A
+    return laplacian_m
 
 
 # Problem 2
@@ -39,8 +43,20 @@ def connectivity(A, tol=1e-8):
         (int): The number of connected components in G.
         (float): the algebraic connectivity of G.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    L = laplacian(A)
+    eigs = np.real(la.eigvals(L))
+    #connected components
+    num_comp = np.sum(eigs < tol)
+    # algebraic connectivity (how strong connected)
+    pos_eigs = eigs[eigs > tol]
+    if len(pos_eigs) > 0:
+        #we want the min eigs
+        alg_con = np.min(pos_eigs)
+    else:
+        alg_con = 0.0
+    return num_comp, alg_con
 
+    
 
 # Helper function for problem 4.
 def get_neighbors(index, radius, height, width):
@@ -82,29 +98,114 @@ class ImageSegmenter:
     # Problem 3
     def __init__(self, filename):
         """Read the image file. Store its brightness values as a flat array."""
-        raise NotImplementedError("Problem 3 Incomplete")
+        #reading and saving the image with its brightness vals as a flat array
+        self.image = imread(filename).astype(np.float64)
+        if self.image.max() > 1:
+            self.image = self.image / 255.0
+        if self.image.ndim == 3:
+        #gets brighness if it is color
+            self.brightness = self.image.mean(axis=2)
+        else:
+            self.brightness = self.image
+        #shape
+        self.shape = self.brightness.shape
+        self.N = self.shape[0] * self.shape[1]
+        self.flattened = self.brightness.flatten()
+        self.flattened = self.brightness.flatten()
+        
+
 
     # Problem 3
     def show_original(self):
         """Display the original image."""
-        raise NotImplementedError("Problem 3 Incomplete")
+        # displays the image correctly with gray and color
+        plt.imshow(self.image, cmap="gray" if self.image.ndim == 2 else None)
+        plt.axis("off")
+        plt.show()
+        
 
     # Problem 4
     def adjacency(self, r=5., sigma_B2=.02, sigma_X2=3.):
         """Compute the Adjacency and Degree matrices for the image graph."""
-        raise NotImplementedError("Problem 4 Incomplete")
+        A = sparse.lil_matrix((self.N, self.N))
+
+        #gonna calculate the adjacency matrix     
+        for i in range(self.N):
+            neighbors, dist = get_neighbors(i, r, self.shape[0], self.shape[1])
+            for j, d in zip(neighbors, dist):
+                w = np.exp(-(self.flattened[i] - self.flattened[j])**2 / sigma_B2
+                        - d**2 / sigma_X2)
+                A[i, j] = w
+                A[j, i] = w
+        #change to csc to make faster
+        A = A.tocsc()
+        D = sparse.diags(np.array(A.sum(axis=1)).flatten())
+        return A, D
 
     # Problem 5
     def cut(self, A, D):
         """Compute the boolean mask that segments the image."""
-        raise NotImplementedError("Problem 5 Incomplete")
+        #unnormalized laplacian
+        L = sparse.csgraph.laplacian(A, normed=False)
+        D_diag = np.array(D.sum(axis=1)).flatten()
+        D_diag[D_diag == 0] = 1.0   # avoid divide by zero
+        D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_diag))
+        L_norm = D_inv_sqrt @ L @ D_inv_sqrt
+        
+        #second smallest eig vect
+        X = np.random.rand(L_norm.shape[0], 2)
+
+        vals, vecs = spla.lobpcg(L_norm, X, largest=False, tol=1e-3, maxiter=1000)
+        idx = np.argsort(vals)   # sort eigenvalues
+        vals = vals[idx]
+        vecs = vecs[:, idx]
+        fiedler_vector = vecs[:, 1]  # second smallest
+
+        #thresold 0 to get boolean mask
+        thresh = np.median(fiedler_vector)
+        mask = fiedler_vector > thresh
+        mask = mask.reshape(self.brightness.shape)
+        return mask
+
 
     # Problem 6
-    def segment(self, r=5., sigma_B=.02, sigma_X=3.):
+    def segment(self, r=5., sigma_B2=.02, sigma_X2=3.):
         """Display the original image and its segments."""
-        raise NotImplementedError("Problem 6 Incomplete")
+        # adjacency and degree matrices
+        A, D = self.adjacency(r=r, sigma_B2=sigma_B2, sigma_X2=sigma_X2)
+
+        # segmetation mask
+        mask = self.cut(A, D)
+        #pos neg segments
+        positive = np.zeros_like(self.image)
+        negative = np.zeros_like(self.image)
+
+        #fix grays
+        if self.image.ndim == 2: 
+            positive[mask] = self.image[mask]
+            negative[~mask] = self.image[~mask]
+        #normal colors
+        else: 
+            for c in range(self.image.shape[2]):
+                positive[..., c][mask] = self.image[..., c][mask]
+                negative[..., c][~mask] = self.image[..., c][~mask]
+        
+        fig, axes = plt.subplots(1, 3)
+        #pos segment
+        axes[0].imshow(self.image, cmap='gray' if self.image.ndim == 2 else None)
+        axes[0].set_title("Original Image")
+        axes[0].axis('off')
+        #neg segment
+        axes[1].imshow(positive, cmap='gray' if self.image.ndim == 2 else None)
+        axes[1].set_title("Positive Segment")
+        axes[1].axis('off')
+        #neg segment
+        axes[2].imshow(negative, cmap='gray' if self.image.ndim == 2 else None)
+        axes[2].set_title("Negative Segment")
+        axes[2].axis('off')
+        plt.savefig("segment_graph.png")
 
 
-# if __name__ == '__main__':
-#     ImageSegmenter("dream_gray.png").segment()
-#     ImageSegmenter("dream.png").segment()
+if __name__ == '__main__':
+    ImageSegmenter("dream_gray.png").segment()
+    ImageSegmenter("dream.png").segment()
