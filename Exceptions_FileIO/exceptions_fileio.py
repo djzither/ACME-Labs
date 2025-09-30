@@ -170,6 +170,7 @@ class ContentFilter(object):
         #write it to file
         with open(outfile, mode) as f:
             f.write(text)
+        
 
     def __str__(self):
         """ Printing a ContentFilter object yields the following output:
@@ -194,3 +195,7 @@ class ContentFilter(object):
         f"Numerical characters {digits}\n"
         f"Whitespace chacarters {whitespace}\n"
         f"number of lines:{num_lines}")
+        
+    
+    if __name__ == "__main__":
+        arithmagic()
