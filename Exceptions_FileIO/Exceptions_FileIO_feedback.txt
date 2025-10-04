@@ -1,0 +1,25 @@
+10/04/25 14:56
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+TimeoutError: Timeout after 2 seconds
+
+Problem 4 (25 points):
+KeyboardInterrupt: 
+
+Code Quality (5 points):
+Please remove extraneous function calls!
+Score += 4
+
+Total score: 14/50 = 28.0%
+
+Linter Notes: 
+
+
+-------------------------------------------------------------------------------
+
