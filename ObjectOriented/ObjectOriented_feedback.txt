@@ -4,3 +4,27 @@ object_oriented.py has not been modified yet
 
 -------------------------------------------------------------------------------
 
+10/06/25 01:39
+
+Problem 1 (10 points):
+TypeError: Backpack.__init__() missing 1 required positional argument: 'max_size'
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+TypeError: Backpack.__init__() missing 1 required positional argument: 'max_size'
+
+Problem 4 (15 points):
+Score += 15
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 30/50 = 60.0%
+
+Linter Notes: 
+
+
+-------------------------------------------------------------------------------
+
