@@ -73,7 +73,7 @@ def random_walk(max_iters=1e12):
             walk += choice(directions)
     #we are going to check the keyboard inturrupt
     except KeyboardInterrupt:
-        print(f"process inturrupted at iteration {_}")
+        print(f"Process interrupted at iteration {_}")
         return walk
     else:
         print("Walk completed")
@@ -112,7 +112,7 @@ class ContentFilter(object):
         #these are the possible python file read types
         valid_nodes = {"r", "w", "x", "a"}
         if mode not in valid_nodes:
-            raise ValueError(f"invalid mode {mode}, has to be on of {valid_nodes}")
+            raise ValueError(f"invalid mode {mode}, has to be one of {valid_nodes}")
 
 
     def uniform(self, outfile, mode='w', case='upper'):
