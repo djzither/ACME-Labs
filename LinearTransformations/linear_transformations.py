@@ -119,7 +119,6 @@ def solar_system(T, x_e, x_m, omega_e, omega_m):
     ax.set_aspect("equal")
     ax.plot(earth_x, earth_y, label="Earth Orbit")
     ax.plot(moon_x, moon_y, label="Moon Orbit")
-    ax.scatter([0], [0], c="yellow", s=200, label="Sun")
     ax.set_aspect("equal")
     ax.legend()
     
@@ -260,10 +259,10 @@ def prob4():
 
 
 
-if __name__ == "__main__":
-    solar_system(T = 3*np.pi/2, x_e = 10, x_m = 11, omega_e = 1, omega_m = 13)
-    prob3()
-    prob4()
+# if __name__ == "__main__":
+#     solar_system(T = 3*np.pi/2, x_e = 10, x_m = 11, omega_e = 1, omega_m = 13)
+#     prob3()
+#     prob4()
 
     
 #     solar_system(
