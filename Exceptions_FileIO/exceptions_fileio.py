@@ -96,7 +96,6 @@ class ContentFilter(object):
         """
         #we will read in the file and make sure it is correct
         while True:
-            filename = input("Enter a file name: ")
             try:
                 with open(filename, "r") as f:
                     self.contents = f.read()
@@ -137,7 +136,7 @@ class ContentFilter(object):
         lines, but do not change the ordering of the words on each individual
         line. If unit is not one of these two values, raise a ValueError. """
         #check the unit we are reversing by
-        if unit not in {"line", "work"}:
+        if unit not in {"line", "word"}:
             raise ValueError("unit has to be 'line' or 'word'")
         self.check_mode(mode)
         lines = self.contents.splitlines()
@@ -160,9 +159,9 @@ class ContentFilter(object):
         that there are an equal number of words on each line of the input file. """
         self.check_mode(mode)
         #split up the lines to transpose
-        lines = [line.split() for line in self.contents.splitlines]
+        lines = [line.split() for line in self.contents.splitlines()]
         if not lines:
-            transposed = []
+            text = ""
         else:
             transposed = zip(*lines)
             text = "\n".join(" ".join(word for word in row) for row in transposed)
@@ -188,13 +187,11 @@ class ContentFilter(object):
         whitespace = sum(c.isspace() for c in self.contents)
         num_lines = len(self.contents.splitlines())
         #this gives the output for string
-        return(f"Source file: {self.filename}\n"
-        f"Total Characters: {total_chars}\n"
-        f"Alphabetic characters {letters}\n"
-        f"Numerical characters {digits}\n"
-        f"Whitespace chacarters {whitespace}\n"
-        f"number of lines:{num_lines}")
+        return (f"Source file:            {self.filename}\n"
+        f"Total characters:       {total_chars}\n"
+        f"Alphabetic characters:  {letters}\n"
+        f"Numerical characters:   {digits}\n"
+        f"Whitespace characters:  {whitespace}\n"
+        f"Number of lines:        {num_lines}")
+
         
-    
-    if __name__ == "__main__":
-        arithmagic()
