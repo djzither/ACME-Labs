@@ -1,0 +1,26 @@
+10/11/25 21:40
+
+Problem 1 (10 points):
+shear() failed
+TypeError: unsupported operand type(s) for @: 'list' and 'numpy.float64'
+
+Problem 2 (15 points):
+missing title, and x and y labels
+Score += 11
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 36/50 = 72.0%
+
+Linter Notes: 
+
+
+-------------------------------------------------------------------------------
+
