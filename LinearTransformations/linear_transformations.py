@@ -40,7 +40,7 @@ def shear(A, a, b):
     """
     #shear matrix
     S = np.array([[1, a], [b, 1]])
-    return A.T @ S 
+    return S @ A
 
 
 def reflect(A, a, b):
@@ -121,7 +121,9 @@ def solar_system(T, x_e, x_m, omega_e, omega_m):
     ax.plot(moon_x, moon_y, label="Moon Orbit")
     ax.set_aspect("equal")
     ax.legend()
-    
+    ax.set_xlabel("x position (AU)")
+    ax.set_ylabel("y position (AU)")
+    ax.set_title("Earth and Moon Orbit")
     plt.savefig("solar_system.png", dpi=300)
 
 
