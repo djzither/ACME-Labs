@@ -87,7 +87,7 @@ def solve(A, b):
 
     #gonna back sub
     for i in range(n):
-        y[i] = b[i] - np.sum(L[i,:i] * y[:i])
+        y[i] = b[i] - np.sum(L[i, :i] * y[:i])
     x = np.zeros(n)
 
     for i in reversed(range(n)):
@@ -117,11 +117,11 @@ def prob4():
     times_inv = []
     times_solve = []
     times_lu_full = []
-    times_lu_solve_only =[]
+    times_lu_solve_only = []
 
     #makes your random matrix and b vect
     for n in n_vals:
-        A = np.random.random((n,n))
+        A = np.random.random((n, n))
         b = np.random.random((n))
         
         #gonna time
@@ -182,7 +182,7 @@ def prob5(n):
     main_diag = -4 * np.ones(n)
     upper_diag = np.ones(n-1)
     lower_diag = np.ones(n-1)
-    B = sparse.diags([main_diag, upper_diag, lower_diag], [0,1,-1])
+    B = sparse.diags([main_diag, upper_diag, lower_diag], [0, 1, -1])
     I = sparse.eye(n, format = 'csr')
 
     #construct the sparse matrix

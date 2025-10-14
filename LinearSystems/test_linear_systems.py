@@ -48,11 +48,11 @@ def test_solve():
     
     """Unit Test for problem 2 of linear systems"""
     A = np.eye(4)
-    b = np.array([1,2,3,4])
+    b = np.array([1, 2, 3, 4])
     x = linear_systems.solve(A, b)
     assert np.allclose(x, b), "Failed on Identy Matrix"
     
-    c = np.array([[2, 1],[5, 7]])
+    c = np.array([[2, 1], [5, 7]])
     b3 = np.array([11, 13])
     x3 = linear_systems.solve(c, b3)
     expected = np.linalg.solve(c, b3)
