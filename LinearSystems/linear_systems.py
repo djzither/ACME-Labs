@@ -255,10 +255,10 @@ def prob6():
     plt.savefig("sparse vs dense times.png")
 
 
-if __name__ == "__main__":
-    prob4()
-    print("did 4")
-    print(prob5(2))
-    print("did 5")
-    prob6()
-    print("did 6")
+# if __name__ == "__main__":
+#     prob4()
+#     print("did 4")
+#     print(prob5(2))
+#     print("did 5")
+#     prob6()
+#     print("did 6")
