@@ -24,3 +24,27 @@ Linter Notes:
 
 -------------------------------------------------------------------------------
 
+10/16/25 16:08
+
+Problem 1 (10 points):
+TypeError: unsupported operand type(s) for @: 'list' and 'numpy.float64'
+
+Problem 2 (15 points):
+Score += 15
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 40/50 = 80.0%
+
+Linter Notes: 
+
+
+-------------------------------------------------------------------------------
+
