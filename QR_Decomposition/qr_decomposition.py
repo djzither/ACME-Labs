@@ -67,7 +67,10 @@ def solve(A, b):
     # back substituation to solve
     Q, R = qr_gram_schmidt(A)
     y = Q.T @ b
-    x = np.linalg.solve(R, y)
+    x = np.zeros(np.shape(A))
+    for i in reversed(range(y))[::-1]:
+        x[i] = (b[i] - A[i, i :] @ x[i:])/A[i,i]
+
     return x
 
     

@@ -18,12 +18,19 @@ def compact_svd(A, tol=1e-6):
         ((r,) ndarray): The singular values of A as a 1-D array.
         ((r,n) ndarray): The orthonormal matrix V^H in the SVD.
     """
-    eigs, eigvects = la.eig(A.conj().T @ A)
-    sigma = np.sqrt([i for i in eigs])
-    sigma_sorted = np.sort(sigma)
-    V_sorted = np.sort(eigvects)
-    r = len([i for i in sigma_sorted if i != 0])
-    
+    #svd algorithm
+    eigs, V = la.eig(A.conj().T @ A)
+    sigma = np.sqrt(np.real(eigs))
+    #greatest to least
+    idxs = np.argsort(sigma)[::-1]
+    sigma = sigma[idxs]
+    V = V[:, idxs]
+
+    r = np.sum(sigma > tol)
+    sigma = sigma[:r]
+    V = V[:, :r]
+    U = A @ V / sigma
+    return U, sigma, V.conj().T
 
 
     
@@ -33,8 +40,11 @@ def visualize_svd(A):
     """Plot the effect of the SVD of A as a sequence of linear transformations
     on the unit circle and the two standard basis vectors.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
-
+    theta = np.linspace(0, 2 * np.pi, 200)
+    # S = np.array([
+    #     np.cos(theta),  # x-coordinates
+    #     np.sin(theta)   # y-coordinates
+    # ])
 
 # Problem 3
 def svd_approx(A, s):
@@ -83,3 +93,6 @@ def compress_image(filename, s):
         s (int): Rank of new image.
     """
     raise NotImplementedError("Problem 5 Incomplete")
+
+# if __name__ == "__main__":
+#     compact_svd
