@@ -180,26 +180,30 @@ def prob5(n):
     """
     #construct the matrix
     main_diag = -4 * np.ones(n)
-    upper_diag = np.ones(n-1)
-    lower_diag = np.ones(n-1)
-    B = sparse.diags([main_diag, upper_diag, lower_diag], [0, 1, -1])
-    I = sparse.eye(n, format = 'csr')
+    off_diag = np.ones(n-1)
+    B = sparse.diags([off_diag, main_diag, off_diag], offsets=[-1, 0, 1], format="csr")
+    I = sparse.identity(n, format='csr')
+    A = (sparse.kron(I, B) + sparse.kron(B, I)).tocsr()
+    # upper_diag = np.ones(n-1)
+    # lower_diag = np.ones(n-1)
+    # B = sparse.diags([main_diag, upper_diag, lower_diag], [0, 1, -1])
+    # I = sparse.eye(n, format = 'csr')
 
-    #construct the sparse matrix
-    blocks = []
-    for i in range(n):
-        row = []
-        for j in range(n):
-            if i == j:
-                row.append(B)
-            elif abs(i - j) == 1:
-                row.append(I)
-            else:
-                row.append(None)
+    # #construct the sparse matrix
+    # blocks = []
+    # for i in range(n):
+    #     row = []
+    #     for j in range(n):
+    #         if i == j:
+    #             row.append(B)
+    #         elif abs(i - j) == 1:
+    #             row.append(I)
+    #         else:
+    #             row.append(None)
 
-        blocks.append(row)
+    #     blocks.append(row)
 
-    A = sparse.bmat(blocks, format = 'csr')
+    # A = sparse.bmat(blocks, format = 'csr')
     return A
 
 # Problem 6
@@ -220,7 +224,7 @@ def prob6():
     """
     
     #we will time the dense and sparse matrices
-    ns = [5, 10, 20, 40, 80, 160]
+    ns = [5, 10, 20, 40, 80]
     sparse_times = []
     dense_times = []
     sizes = []
@@ -255,10 +259,10 @@ def prob6():
     plt.savefig("sparse vs dense times.png")
 
 
-# if __name__ == "__main__":
-#     prob4()
-#     print("did 4")
-#     print(prob5(2))
-#     print("did 5")
-#     prob6()
-#     print("did 6")
+if __name__ == "__main__":
+    prob4()
+    print("did 4")
+    print(prob5(2))
+    print("did 5")
+    prob6()
+    print("did 6")

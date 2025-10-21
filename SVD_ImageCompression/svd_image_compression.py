@@ -18,8 +18,15 @@ def compact_svd(A, tol=1e-6):
         ((r,) ndarray): The singular values of A as a 1-D array.
         ((r,n) ndarray): The orthonormal matrix V^H in the SVD.
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    eigs, eigvects = la.eig(A.conj().T @ A)
+    sigma = np.sqrt([i for i in eigs])
+    sigma_sorted = np.sort(sigma)
+    V_sorted = np.sort(eigvects)
+    r = len([i for i in sigma_sorted if i != 0])
+    
 
+
+    
 
 # Problem 2
 def visualize_svd(A):
