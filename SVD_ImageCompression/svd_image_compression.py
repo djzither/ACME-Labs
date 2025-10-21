@@ -41,10 +41,46 @@ def visualize_svd(A):
     on the unit circle and the two standard basis vectors.
     """
     theta = np.linspace(0, 2 * np.pi, 200)
-    # S = np.array([
-    #     np.cos(theta),  # x-coordinates
-    #     np.sin(theta)   # y-coordinates
-    # ])
+    S = np.array([np.cos(theta), np.sin(theta)])
+    E = np.array([[1, 0, 0], [0, 0, 1]])
+    AS = A @ S
+    AE = A @ E
+    
+    fig, axes = plt.subplots(2, 2)
+    axes = axes.flatten()
+
+    axes[0].axhline(0, color='gray', linewidth=1)
+    axes[0].axvline(0, color='gray', linewidth=1)
+    axes[0].plot(S[0], S[1], 'b')
+
+    
+    axes[1].axhline(0, color='gray', linewidth=1)
+    axes[1].axvline(0, color='gray', linewidth=1)
+    axes[1].plot(AS[0], AS[1], 'b')
+
+    
+    axes[2].axhline(0, color='gray', linewidth=1)
+    axes[2].axvline(0, color='gray', linewidth=1)
+    axes[2].plot(E[0], E[1], 'b')
+
+    
+    axes[3].axhline(0, color='gray', linewidth=1)
+    axes[3].axvline(0, color='gray', linewidth=1)
+    axes[3].plot(AE[0], AE[1], 'b')
+    
+    
+    # Formatting
+    plt.axis("equal")
+    plt.legend()
+    plt.title("Effect of A on E and S")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.savefig("SVD_on_SE.png")
+    
+ 
+
+
+
 
 # Problem 3
 def svd_approx(A, s):
@@ -60,7 +96,15 @@ def svd_approx(A, s):
         ((m,n), ndarray) The best rank s approximation of A.
         (int) The number of entries needed to store the truncated SVD.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    u, sigma, v_conj = compact_svd(A)
+    #this strips off the columns and entries that don't matter
+    U_s = u[:, :s]
+    Sigma_s = sigma[:s]
+    vh_s = v_conj[:s, :]
+    
+
+
+
 
 
 # Problem 4
@@ -78,7 +122,8 @@ def lowest_rank_approx(A, err):
             ||A - A_s||_2 < err.
         (int) The number of entries needed to store the truncated SVD.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    u, sigma, v = compact_svd(A)
+    
 
 
 # Problem 5
@@ -94,5 +139,5 @@ def compress_image(filename, s):
     """
     raise NotImplementedError("Problem 5 Incomplete")
 
-# if __name__ == "__main__":
-#     compact_svd
+if __name__ == "__main__":
+    visualize_svd([[3, 1], [1, 3]])
