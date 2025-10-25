@@ -1,0 +1,41 @@
+10/25/25 15:10
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+TypeError: only integer scalar arrays can be converted to a scalar index
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (10 points):
+TypeError: 'float' object is not callable
+
+Code Quality (5 points):
+too many linters
+Score += 3
+
+Total score: 28/50 = 56.0%
+
+Linter Notes: 
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:30:40: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:31:12: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:31:21: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:31:30: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:72:30: E203 whitespace before ':'
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:72:46: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:98:25: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:128:17: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:139:52: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:140:15: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:140:47: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:158:6: E231 missing whitespace after ','
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/QR_Decomposition/qr_decomposition.py:182:6: E231 missing whitespace after ','
+
+
+-------------------------------------------------------------------------------
+
