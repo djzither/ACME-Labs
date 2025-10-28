@@ -43,39 +43,33 @@ def visualize_svd(A):
     theta = np.linspace(0, 2 * np.pi, 200)
     S = np.array([np.cos(theta), np.sin(theta)])
     E = np.array([[1, 0, 0], [0, 0, 1]])
-    AS = A @ S
-    AE = A @ E
-    
+    #svd
+    U, sigma, VT = la.svd(A)
+    Sigma = np.diag(sigma)
+
+    #all the transforms that it wants
+    VS = VT @ S
+    VSE = VT @ E
+    SVS = Sigma @ VS
+    SVE = Sigma @ VSE
+    AVS = U @ SVS
+    AVE = U @ SVE
+
+    #create subplots
     fig, axes = plt.subplots(2, 2)
     axes = axes.flatten()
+    datasets = [(S, E), (VS, VSE), (SVS, SVE), (AVS, AVE)]
+    titles = [r"$S$", r"$V^TS$", r"$\Sigma V^TS$", r"$U\Sigma V^TS$"]
 
-    axes[0].axhline(0, color='gray', linewidth=1)
-    axes[0].axvline(0, color='gray', linewidth=1)
-    axes[0].plot(S[0], S[1], 'b')
+    for ax, (S_now, E_now), title in zip(axes, datasets, titles):
+        ax.plot(S_now[0], S_now[1], 'b')
+        ax.plot([0, E_now[0, 0]], [0, E_now[1, 0]])
+        ax.plot([0, E_now[0, 2]], [0, E_now[1, 2]])
+        ax.set_title(title)
+        ax.set_aspect('equal')
 
-    
-    axes[1].axhline(0, color='gray', linewidth=1)
-    axes[1].axvline(0, color='gray', linewidth=1)
-    axes[1].plot(AS[0], AS[1], 'b')
-
-    
-    axes[2].axhline(0, color='gray', linewidth=1)
-    axes[2].axvline(0, color='gray', linewidth=1)
-    axes[2].plot(E[0], E[1], 'b')
-
-    
-    axes[3].axhline(0, color='gray', linewidth=1)
-    axes[3].axvline(0, color='gray', linewidth=1)
-    axes[3].plot(AE[0], AE[1], 'b')
-    
-    
-    # Formatting
-    plt.axis("equal")
-    plt.legend()
-    plt.title("Effect of A on E and S")
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-    plt.savefig("SVD_on_SE.png")
+    plt.tight_layout()
+    plt.savefig('svd_visualization.png')
     
  
 
@@ -101,6 +95,15 @@ def svd_approx(A, s):
     U_s = u[:, :s]
     Sigma_s = sigma[:s]
     vh_s = v_conj[:s, :]
+    # Best rank-s approximation svd formula
+    A_s = U_s @ np.diag(Sigma_s) @ vh_s
+    
+
+    # Number of entries to store truncated SVD
+    entries = s * (A.shape[0] + A.shape[1] + 1)
+
+    return A_s, entries
+
     
 
 
@@ -122,8 +125,22 @@ def lowest_rank_approx(A, err):
             ||A - A_s||_2 < err.
         (int) The number of entries needed to store the truncated SVD.
     """
+
     u, sigma, v = compact_svd(A)
+
+    if err <= sigma[-1]: #the value of thei index that is smaller than the error
+        raise ValueError("error is too small")
     
+    # find smallest s such that sigma s+1 < err
+
+    s = np.argmax(sigma < err)
+    #compute the rank-s approx
+    A_s, entries = svd_approx(A, s)
+
+ 
+    return A_s, entries
+
+
 
 
 # Problem 5
@@ -137,7 +154,57 @@ def compress_image(filename, s):
         filename (str): Image file path.
         s (int): Rank of new image.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    #we are going to compress the image
+    #grey
+    image = imread(filename) / 255
+    if image.ndim == 2:
+        A_s, entries = lowest_rank_approx(image, s)
+        compressed = np.clip(A_s, 0, 1)
+    #color problems baby
+    elif image.ndim == 3 and image.shape[2] == 3:
+        channels = []
+        total_entries = 0
+        #each channel separately
+        for i in range(3):
+            A_s, entries = svd_approx(image[:, :, i], s)
+            channels.append(A_s)
+            total_entries += entries
+    #put em bakc to gether
+        compressed = np.dstack(channels)
+        entries = total_entries
 
-if __name__ == "__main__":
-    visualize_svd([[3, 1], [1, 3]])
+    else:
+        raise ValueError("Image grayscale or RGb")
+    #how many pixel values minues origional
+    original_entries = np.prod(image.shape)
+    saved = original_entries - entries
+
+    #we will plot each one
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+    axes[0].imshow(image, cmap='gray' if image.ndim == 2 else None)
+    axes[0].set_title("Original")
+    axes[0].axis('off')
+
+    axes[1].imshow(compressed, cmap='gray' if image.ndim == 2 else None)
+    axes[1].set_title(f"Rank- {s} Approx")
+    axes[1].axis('off')
+
+    plt.suptitle(f"Compression: saved {saved:,} entries out of {original_entries:,}")
+    plt.savefig('done_compressed.png')
+
+
+
+
+
+# if __name__ == "__main__":
+#     visualize_svd([[3, 1], [1, 3]])
+#     A = np.array([[3, 1],
+#                     [1, 3]])
+#     err = 2.5
+
+#     A_s, entries = lowest_rank_approx(A, err)
+#     print("A_s:\n", A_s)
+#     print("Entries:", entries)
+
+    
+#     compress_image('hubble.jpg', 30)

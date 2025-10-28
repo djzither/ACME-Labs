@@ -19,4 +19,18 @@ def test_compact_svd(): # problem 1
         
 def test_svd_approx(): # problem 3
     """Unit test for approximating the rank S SVD approximation of a matrix A"""
-    raise NotImplementedError('Unit test for SVD approx incomplete')
+    A = np.array([[3, 1], [1, 3]])
+    s = 1
+    A_s, entries = sv.svd_approx(A, s)
+
+    assert A_s.shape == A.shape
+    expected_entries = s * (A.shape[0] + A.shape[1] + 1)
+    assert entries == expected_entries, f"expected {expected_entries} entries"
+
+    assert np.linalg.matrix_rank(A_s) <= s
+    fro_error = np.linalg.norm(A - A_s, 'fro')
+    assert fro_error >= 0, "Frobenius norm error should be non-negative"
+
+    print("All tests passed!")
+
+    
