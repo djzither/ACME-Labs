@@ -28,7 +28,7 @@ def qr_gram_schmidt(A):
     # preforms the gram schmidt algorithm
     for i in range(n):
         R[i, i] = scipy.linalg.norm(Q[:,i])
-        Q[:,i] = Q[:,i] / R[i,i]
+        Q[:, i] = Q[:, i] / R[i, i]
         for j in range(i+1, n):
             R[i, j] = np.dot(Q[:, i], Q[:, j])
             Q[:, j] = Q[:, j] - R[i, j] * Q[:, i]
@@ -67,9 +67,9 @@ def solve(A, b):
     # back substituation to solve
     Q, R = qr_gram_schmidt(A)
     y = Q.T @ b
-    x = np.zeros(np.shape(A))
-    for i in reversed(range(y))[::-1]:
-        x[i] = (b[i] - A[i, i :] @ x[i:])/A[i,i]
+    x = np.zeros(len(b))
+    for i in reversed(range(len(y))):
+        x[i] = (y[i] - R[i, i+1:] @ x[i+1:]) / R[i,i]
 
     return x
 
@@ -95,7 +95,7 @@ def qr_householder(A):
     R = np.copy(A)
     Q = np.eye(m)
     # we are going to loop over all the colomns and then 0 out the entries below the diagonal
-    for k in range(min(m,n)):
+    for k in range(min(m, n)):
         # makes the reflection
         u = np.copy(R[k:, k])
         norm_u = np.linalg.norm(u)
@@ -125,87 +125,128 @@ def hessenberg(A):
     # initialize hessenburg
     m, n = np.shape(A)
     H = np.copy(A)
-    Q = np.eye(m,m)
+    Q = np.eye(m, m)
 
-    for k in range(n-3):
+    for k in range(n-2):
         # makes the reflection
         u = np.copy(H[k+1:, k])
         sign = 1.0 if u[0] >= 0 else -1.0
-        u[0] = u[0] + sign(u[0]) * np.linalg.norm(u)
+        u[0] = u[0] + sign * np.linalg.norm(u)
         u = u / np.linalg.norm(u)
 
+        
+        H[k+1:, k:] -= 2 * np.outer(u, u.T @ H[k+1:, k:])
+        H[k+1:, k+1:] -= 2 * np.outer(H[k+1:, k+1:] @ u, u.T)
+        Q[:, k+1:] -= 2 * np.outer(Q[:, k+1:] @ u, u.T)
 
-        H[k+1:, k:] -= -2 * np.outer(u, u.T @ H[k+1:, k:])
-        H[:, k+1:] -= -2 * np.matmul((np.matmul(H[:,k+1:], u)), u.T)
-        Q[k+1:,:] -= -2 * np.outer(u.T, Q[k+1:,:])
-
-        return H, Q.T
-
-
+    return H, Q
 
 
 
-if __name__ == "__main__":
-    A = np.array([[1, 1], [1, 0], [0, 1]], dtype=float)
 
-    Q, R = qr_gram_schmidt(A)
 
-    print("Q =\n", Q)
-    print("R =\n", R)
-    print("Check: QR =\n", Q @ R)
+# if __name__ == "__main__":
+#     A = np.array([[1, 1], [1, 0], [0, 1]], dtype=float)
 
-    A = np.random.random((6, 4))
-    Q,R = la.qr(A, mode="economic") # Use mode="economic" for reduced QR.
-    print(A.shape, Q.shape, R.shape)
-    (6, 4), (6, 4), (4, 4)
+#     Q, R = qr_gram_schmidt(A)
 
-    # Verify that R is upper triangular, Q is orthonormal, and QR = A.
-    np.allclose(np.triu(R), R)
-    True
-    np.allclose(Q.T @ Q, np.identity(4))
-    True
-    np.allclose(Q @ R, A)
-    True
+#     print("Q =\n", Q)
+#     print("R =\n", R)
+#     print("Check: QR =\n", Q @ R)
 
-    A = np.array([[2, 1], [1, 3]], dtype=float)
+#     A = np.random.random((6, 4))
+#     Q,R = la.qr(A, mode="economic") # Use mode="economic" for reduced QR.
+#     print(A.shape, Q.shape, R.shape)
+#     (6, 4), (6, 4), (4, 4)
 
-    print("QR determinant:", abs_det(A))
-    print("np.linalg.det:", np.linalg.det(A))  
+#     # Verify that R is upper triangular, Q is orthonormal, and QR = A.
+#     np.allclose(np.triu(R), R)
+#     True
+#     np.allclose(Q.T @ Q, np.identity(4))
+#     True
+#     np.allclose(Q @ R, A)
+#     True
 
-    A = np.array([[2, 1], [1, 3]], dtype=float)
-    b = np.array([1, 2], dtype=float)
+#     A = np.array([[2, 1], [1, 3]], dtype=float)
 
-    x = solve(A, b)
-    print(f"Answer for Ax = b {x}")
+#     print("QR determinant:", abs_det(A))
+#     print("np.linalg.det:", np.linalg.det(A))  
+
+#     A = np.array([[2, 1], [1, 3]], dtype=float)
+#     b = np.array([1, 2], dtype=float)
+
+#     x = solve(A, b)
+#     print(f"Answer for Ax = b {x}")
     
-    A = np.random.random((5, 3))
-    Q,R = la.qr(A)                  # Get the full QR decomposition.
-    print(A.shape, Q.shape, R.shape)
-    (5, 3), (5, 5), (5, 3)
+#     A = np.random.random((5, 3))
+#     Q,R = la.qr(A)                  # Get the full QR decomposition.
+#     print(A.shape, Q.shape, R.shape)
+#     (5, 3), (5, 5), (5, 3)
 
-    np.allclose(Q @ R, A)
-    True
+#     np.allclose(Q @ R, A)
+#     True
 
-    # test householder
-    A = np.random.randn(4, 4)
-    Q, R = qr_householder(A)
+#     # test householder
+#     A = np.random.randn(4, 4)
+#     Q, R = qr_householder(A)
 
-    A = np.random.randn(3, 5)
-    Q, R = qr_householder(A)
-    np.testing.assert_allclose(Q.T @ Q, np.eye(3), atol=1e-10)
-    np.testing.assert_allclose(Q @ R, A, atol=1e-10)
+#     A = np.random.randn(3, 5)
+#     Q, R = qr_householder(A)
+#     np.testing.assert_allclose(Q.T @ Q, np.eye(3), atol=1e-10)
+#     np.testing.assert_allclose(Q @ R, A, atol=1e-10)
 
-    print("All tests passed!")
-    # Tests for Hessenburg
-    # Generate a random matrix and get its upper Hessenberg form via SciPy.
-    A = np.random.random((8, 8))
-    H, Q = la.hessenberg(A, calc_q=True)
+#     # Tests for Hessenburg
+#     # Generate a random matrix and get its upper Hessenberg form via SciPy.
+#     A = np.random.random((8, 8))
+#     H, Q = la.hessenberg(A, calc_q=True)
 
-    # Verify that H has all zeros below
-    np.allclose(np.triu(H, -1), H)
-    True
-    np.allclose(Q @ H @ Q.T, A)
-    True
+#     # Verify that H has all zeros below
+#     np.allclose(np.triu(H, -1), H)
+#     True
+#     np.allclose(Q @ H @ Q.T, A)
+#     True
+
+#     # Example system Ax = b
+#     A = np.array([[2., -1., 0.],
+#                   [-1., 2., -1.],
+#                   [0., -1., 2.]])
+#     b = np.array([1., 0., 1.])
+
+#     # Compute solution using your QR-based solver
+#     x_qr = solve(A, b)
+
+#     # Compare to NumPy's built-in solver
+#     x_np = np.linalg.solve(A, b)
+
+#     # Print results
+#     print("x (from QR solver):", x_qr)
+#     print("x (from numpy.linalg.solve):", x_np)
+
+    
+#     if np.allclose(x_qr, x_np):
+#         print("✅ Test passed: solutions match!")
+#     else:
+#         print("❌ Test failed: solutions differ.")
+
+
+#     from scipy.linalg import hessenberg as sp_hessenberg
+
+#     A = np.random.random((8, 8))
+#     H, Q = hessenberg(A)          # ← your function
+
+   
+#     print("Upper Hessenberg?", np.allclose(np.triu(H, -1), H))
+
+#     # Verify A = Q H Qᵀ
+#     print("Reconstruction check:", np.allclose(Q @ H @ Q.T, A))
+
+    
+#     Hs, Qs = sp_hessenberg(A, calc_q=True)
+#     print("\nCompare to SciPy:")
+#     print("H close to scipy:", np.allclose(H, Hs))
+#     print("Q close to scipy (up to sign):", np.allclose(np.abs(Q), np.abs(Qs)))
+
+
 
 
 
