@@ -40,3 +40,47 @@ Linter Notes:
 
 -------------------------------------------------------------------------------
 
+11/04/25 17:11
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (5 points):
+Score += 5
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Linter notes
+Score += 3
+
+Total score: 48/50 = 96.0%
+
+Great job!
+
+Linter Notes: 
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:55:41: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:55:43: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:82:61: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:82:63: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:86:48: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:86:50: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:87:43: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:87:45: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:124:28: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:124:30: E251 unexpected spaces around keyword / parameter equals
+/workspaces/vol1-first-grading-alexmanne/DerekRobinson/LeastSquares_Eigenvalues/leastsquares_eigenvalues.py:199:20: E262 inline comment should start with '# '
+
+
+-------------------------------------------------------------------------------
+
