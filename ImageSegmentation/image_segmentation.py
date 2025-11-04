@@ -133,8 +133,8 @@ class ImageSegmenter:
         for i in range(self.N):
             neighbors, dist = get_neighbors(i, r, self.shape[0], self.shape[1])
             for j, d in zip(neighbors, dist):
-                w = np.exp(-(self.flattened[i] - self.flattened[j])**2 / sigma_B2
-                        - d**2 / sigma_X2)
+                w = np.exp(-np.abs((self.flattened[i] - self.flattened[j])) / sigma_B2
+                        - abs(d) / sigma_X2)
                 A[i, j] = w
                 A[j, i] = w
         #change to csc to make faster
@@ -152,9 +152,10 @@ class ImageSegmenter:
         D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_diag))
         L_norm = D_inv_sqrt @ L @ D_inv_sqrt
         
-        #second smallest eig vect
+        #second smallest eig vect with random first guess
         X = np.random.rand(L_norm.shape[0], 2)
 
+        #we only are finding the 2smallest eig vects
         vals, vecs = spla.lobpcg(L_norm, X, largest=False, tol=1e-3, maxiter=1000)
         idx = np.argsort(vals)   # sort eigenvalues
         vals = vals[idx]

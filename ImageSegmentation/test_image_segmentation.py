@@ -48,7 +48,7 @@ def test_connectivity(set_up_matrices):
     expected_num_comp, _ = sp.csgraph.connected_components(A, directed=False, return_labels=True)
     num_comp, alg_con = image_segmentation.connectivity(A)
     assert  num_comp == expected_num_comp, "incorrect num comp"
-    assert isinstance(alg_con, float), "algebraic not correct"
+    assert round(alg_con, 2) == 1.59, "algebraic not correct"
 
 def test_adjacency_heart():
     #tests adjancecy matrix
@@ -58,7 +58,7 @@ def test_adjacency_heart():
     A, D = seg.adjacency()
 
     assert np.allclose((A - A_ref).data, 0, atol=1e-12)
-    assert np.allclose(D.toarray(), D_ref, atol=1e-12)
+    assert np.allclose(D.diagonal(), D_ref, atol=1e-12)
 
 
     
