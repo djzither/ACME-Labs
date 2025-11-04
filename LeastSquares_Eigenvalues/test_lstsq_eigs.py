@@ -4,6 +4,7 @@
 import leastsquares_eigenvalues as lstsq_eigs
 import pytest
 import numpy as np
+from scipy import linalg as la
 
 def test_qr_algorithm():
     """
@@ -13,6 +14,28 @@ def test_qr_algorithm():
     eig_vals = lstsq_eigs.qr_algorithm(A)
     expected = np.array([1, 2, 3])
     assert np.allclose(sorted(eig_vals), sorted(expected), atol=1e-10)
+
+
+def test_qr_algorithm_complex():
+    """
+    Test qr_algorithm on a random non-symmetric matrix
+    to ensure it correctly handles complex eigenvalues.
+    """
+    np.random.seed(42)
+    n = 5
+    A = np.random.randn(n, n)  # possible complex eigs
+
+    eig_vals = lstsq_eigs.qr_algorithm(A)  
+    expected = np.linalg.eigvals(A)       
+
+    # real and imag
+    expected_sorted = sorted(expected, key=lambda x: (x.real, x.imag))
+    eig_vals_sorted = sorted(eig_vals, key=lambda x: (x.real, x.imag))
+
+    assert np.allclose(eig_vals_sorted, expected_sorted, atol=1e-4), \
+        f"Expected {expected_sorted}, got {eig_vals_sorted}"
+
+
 def test_power_method():
     #Sets up test cases
     A = np.array([[1, 1], [1, 1]])

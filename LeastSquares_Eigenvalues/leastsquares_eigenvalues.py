@@ -6,7 +6,7 @@
 """
 
 import numpy as np
-from cmath import sqrt
+import cmath
 from scipy import linalg as la
 from matplotlib import pyplot as plt
 
@@ -64,6 +64,7 @@ def polynomial_fit(dataset="housing.npy"):
     the year to the housing price index for the data in housing.npy. Plot both
     the data points and the least squares polynomials in individual subplots.
     """
+    #load in housing data
     data = np.load(dataset)
     years = data[:, 0]
     housing_price = data[:, 1]
@@ -93,6 +94,7 @@ def polynomial_fit(dataset="housing.npy"):
 
 def plot_ellipse(a, b, c, d, e):
     """Plot an ellipse of the form ax^2 + bx + cxy + dy + ey^2 = 1."""
+    #this is how we plot the ellipse
     theta = np.linspace(0, 2*np.pi, 200)
     cos_t, sin_t = np.cos(theta), np.sin(theta)
     A = a*(cos_t**2) + c*cos_t*sin_t + e*(sin_t**2)
@@ -108,6 +110,7 @@ def ellipse_fit(dataset="ellipse.npy"):
     ellipse.npy. Plot the original data points and the ellipse together, using
     plot_ellipse() to plot the ellipse.
     """
+    # this is how we do the best fit ellipse
     plt.cla()
     data = np.load(dataset)
     x = data[:, 0]
@@ -158,7 +161,7 @@ def power_method(A, N=20, tol=1e-12):
     return x.T @ A @ x, x
 
 # Problem 6
-def qr_algorithm(A, N=50, tol=1e-12):
+def qr_algorithm(A, N=100, tol=1e-12):
     """Compute the eigenvalues of A via the QR algorithm.
 
     Parameters:
@@ -172,7 +175,7 @@ def qr_algorithm(A, N=50, tol=1e-12):
     """
     m, n = np.shape(A)
     S = la.hessenberg(A)
-
+    #we are just following the algorithm
     for _ in range(N):
         Q, R = la.qr(S)
         S = R @ Q
@@ -185,13 +188,13 @@ def qr_algorithm(A, N=50, tol=1e-12):
             i += 1
         # 2x2 eig vals == hard!!
         else:
-            a, b, c, d = S[i, i+1], S[i+1, i], S[i+1, i+1]
+            a, b, c, d = S[i, i], S[i, i+1], S[i+1, i], S[i+1, i+1]
             trace = a + d
             det = a * d - b * c
             disc = trace**2 - 4 * det
             #eig vals
-            root1 = (trace + sqrt(disc)) / 2
-            root2 = (trace - sqrt(disc)) / 2
+            root1 = (trace + cmath.sqrt(disc)) / 2
+            root2 = (trace - cmath.sqrt(disc)) / 2
             eigs.extend([root1, root2])
             i += 2 #2 rows this time
     return np.array(eigs)
