@@ -50,6 +50,11 @@ def test_connectivity(set_up_matrices):
     assert  num_comp == expected_num_comp, "incorrect num comp"
     assert round(alg_con, 2) == 1.59, "algebraic not correct"
 
+    expected_num_comp, _ = sp.csgraph.connected_components(B, directed=True, return_labels=True)
+    num_comp, alg_con = image_segmentation.connectivity(B)
+    assert num_comp == expected_num_comp, "incorrect num comp"
+
+
 def test_adjacency_heart():
     #tests adjancecy matrix
     A_ref = sp.load_npz("HeartMatrixA.npz")
