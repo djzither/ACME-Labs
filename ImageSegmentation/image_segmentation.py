@@ -139,7 +139,8 @@ class ImageSegmenter:
                 A[j, i] = w
         #change to csc to make faster
         A = A.tocsc()
-        D = sparse.diags(np.array(A.sum(axis=1)).flatten())
+        D = np.diag(np.array(A.sum(axis=1)).flatten())
+
         return A, D
 
     # Problem 5
@@ -147,10 +148,21 @@ class ImageSegmenter:
         """Compute the boolean mask that segments the image."""
         #unnormalized laplacian
         L = sparse.csgraph.laplacian(A, normed=False)
-        D_diag = np.array(D.sum(axis=1)).flatten()
-        D_diag[D_diag == 0] = 1.0   # avoid divide by zero
-        D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_diag))
+        # D_diag = np.array(D.sum(axis=1)).flatten()
+
+        # D_diag[D_diag == 0] = 1.0   # avoid divide by zero
+        # D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_diag))
+        # L_norm = D_inv_sqrt @ L @ D_inv_sqrt
+
+        # L is (N, N)
+        # D is 1D of length N
+        # adjacency returns A and D
+        D = np.array(A.sum(axis=1)).flatten()  
+        D[D == 0] = 1.0                        
+        D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D))
+
         L_norm = D_inv_sqrt @ L @ D_inv_sqrt
+
         
         #second smallest eig vect with random first guess
         X = np.random.rand(L_norm.shape[0], 2)
@@ -163,8 +175,7 @@ class ImageSegmenter:
         fiedler_vector = vecs[:, 1]  # second smallest
 
         #thresold 0 to get boolean mask
-        thresh = np.median(fiedler_vector)
-        mask = fiedler_vector > thresh
+        mask = fiedler_vector > 0
         mask = mask.reshape(self.brightness.shape)
         return mask
 
@@ -210,3 +221,8 @@ class ImageSegmenter:
 if __name__ == '__main__':
     ImageSegmenter("dream_gray.png").segment()
     ImageSegmenter("dream.png").segment()
+
+    from scipy.stats import norm
+    z = 2.53
+    prob = norm.cdf(z)
+    print(prob)
