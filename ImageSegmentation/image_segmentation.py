@@ -45,13 +45,13 @@ def connectivity(A, tol=1e-8):
     """
     L = laplacian(A)
     eigs = np.real(la.eigvals(L))
+    eigs.sort()
     #connected components
     num_comp = np.sum(eigs < tol)
-    # algebraic connectivity (how strong connected)
-    pos_eigs = eigs[eigs > tol]
-    if len(pos_eigs) > 0:
+
+    if num_comp < len(eigs):
         #we want the min eigs
-        alg_con = np.min(pos_eigs)
+        alg_con = eigs[num_comp]
     else:
         alg_con = 0.0
     return num_comp, alg_con
@@ -121,7 +121,7 @@ class ImageSegmenter:
         # displays the image correctly with gray and color
         plt.imshow(self.image, cmap="gray" if self.image.ndim == 2 else None)
         plt.axis("off")
-        plt.show()
+        plt.savefig("the_og_image.png")
         
 
     # Problem 4
@@ -139,44 +139,31 @@ class ImageSegmenter:
                 A[j, i] = w
         #change to csc to make faster
         A = A.tocsc()
-        D = np.diag(np.array(A.sum(axis=1)).flatten())
+        D = np.array(A.sum(axis=1)).flatten()
+
 
         return A, D
 
-    # Problem 5
     def cut(self, A, D):
-        """Compute the boolean mask that segments the image."""
-        #unnormalized laplacian
-        L = sparse.csgraph.laplacian(A, normed=False)
-        # D_diag = np.array(D.sum(axis=1)).flatten()
+        """we are going to segment the image"""
+        # lapalacian
+        D_mat = sparse.diags(D)
+        L = D_mat - A
 
-        # D_diag[D_diag == 0] = 1.0   # avoid divide by zero
-        # D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_diag))
-        # L_norm = D_inv_sqrt @ L @ D_inv_sqrt
-
-        # L is (N, N)
-        # D is 1D of length N
-        # adjacency returns A and D
-        D = np.array(A.sum(axis=1)).flatten()  
-        D[D == 0] = 1.0                        
-        D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D))
-
+        #the d^-1/2 matrox
+        D_safe = D.copy()
+        D_safe[D_safe == 0] = 1.0
+        D_inv_sqrt = sparse.diags(1.0 / np.sqrt(D_safe))
         L_norm = D_inv_sqrt @ L @ D_inv_sqrt
 
+        #smallest eig
+        vals, vecs = spla.eigsh(L_norm, k=2, which="SM")
+
+        #reshape to ge the mask
+        fiedler_vector = vecs[:, 1] 
+        mask = fiedler_vector > 0   
+        mask = mask.reshape(self.shape) 
         
-        #second smallest eig vect with random first guess
-        X = np.random.rand(L_norm.shape[0], 2)
-
-        #we only are finding the 2smallest eig vects
-        vals, vecs = spla.lobpcg(L_norm, X, largest=False, tol=1e-3, maxiter=1000)
-        idx = np.argsort(vals)   # sort eigenvalues
-        vals = vals[idx]
-        vecs = vecs[:, idx]
-        fiedler_vector = vecs[:, 1]  # second smallest
-
-        #thresold 0 to get boolean mask
-        mask = fiedler_vector > 0
-        mask = mask.reshape(self.brightness.shape)
         return mask
 
 
@@ -188,20 +175,15 @@ class ImageSegmenter:
 
         # segmetation mask
         mask = self.cut(A, D)
-        #pos neg segments
-        positive = np.zeros_like(self.image)
-        negative = np.zeros_like(self.image)
-
         #fix grays
         if self.image.ndim == 2: 
-            positive[mask] = self.image[mask]
-            negative[~mask] = self.image[~mask]
+            positive = self.image * mask
+            nnegative = self.image * (~mask)
         #normal colors
         else: 
-            for c in range(self.image.shape[2]):
-                positive[..., c][mask] = self.image[..., c][mask]
-                negative[..., c][~mask] = self.image[..., c][~mask]
-        
+            mask_3d = np.stack([mask] * 3, axis=-1)
+            positive = self.image * mask_3d
+            negative = self.image * (~mask_3d)
         fig, axes = plt.subplots(1, 3)
         #pos segment
         axes[0].imshow(self.image, cmap='gray' if self.image.ndim == 2 else None)
@@ -217,7 +199,6 @@ class ImageSegmenter:
         axes[2].axis('off')
         plt.savefig("segment_graph.png")
 
-
 if __name__ == '__main__':
     ImageSegmenter("dream_gray.png").segment()
     ImageSegmenter("dream.png").segment()
@@ -226,3 +207,5 @@ if __name__ == '__main__':
     z = 2.53
     prob = norm.cdf(z)
     print(prob)
+
+    

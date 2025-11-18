@@ -66,6 +66,8 @@ def test_adjacency_heart():
     assert np.allclose(D.diagonal(), D_ref, atol=1e-12)
 
 
+
+
     
 
 
