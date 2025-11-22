@@ -82,3 +82,38 @@ Linter Notes:
 
 -------------------------------------------------------------------------------
 
+11/18/25 16:31
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (10 points):
+connectivity() failed for algebraic connectivity
+	Correct response: 1.9457351694525522e-16
+	Student response: 1.0
+Score += 7
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (5 points):
+UnboundLocalError: cannot access local variable 'negative' where it is not associated with a value
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 42/50 = 84.0%
+
+Linter Notes: 
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/ImageSegmentation/image_segmentation.py:106:9: E115 expected an indented block (comment)
+/workspaces/vol1-first-grading-jrhmc1/DerekRobinson/ImageSegmentation/image_segmentation.py:181:13: F841 local variable 'nnegative' is assigned to but never used
+
+
+-------------------------------------------------------------------------------
+
