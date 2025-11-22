@@ -19,18 +19,28 @@ def compact_svd(A, tol=1e-6):
         ((r,n) ndarray): The orthonormal matrix V^H in the SVD.
     """
     #svd algorithm
-    eigs, V = la.eig(A.conj().T @ A)
-    sigma = np.sqrt(np.real(eigs))
-    #greatest to least
-    idxs = np.argsort(sigma)[::-1]
-    sigma = sigma[idxs]
-    V = V[:, idxs]
+    B = A.conj().T @ A                  # Step 1
+    eigvals, V = la.eigh(B)             # Step 2 (ascending)
 
-    r = np.sum(sigma > tol)
-    sigma = sigma[:r]
+    eigvals = np.maximum(eigvals, 0)     # Numerical fix
+    s = np.sqrt(eigvals)
+
+    # sorting decreasingg
+    idx = np.argsort(s)[::-1]
+    s = s[idx]
+    V = V[:, idx]
+
+    # don't want zero sing vals
+    r = np.sum(s > tol)
+    s = s[:r]
     V = V[:, :r]
-    U = A @ V / sigma
-    return U, sigma, V.conj().T
+
+    # u array brodcasting
+
+    U = (A @ V) / s[np.newaxis, :]
+
+    return U, s, V.conj().T
+
 
 
     
@@ -90,17 +100,21 @@ def svd_approx(A, s):
         ((m,n), ndarray) The best rank s approximation of A.
         (int) The number of entries needed to store the truncated SVD.
     """
-    u, sigma, v_conj = compact_svd(A)
-    #this strips off the columns and entries that don't matter
-    U_s = u[:, :s]
-    Sigma_s = sigma[:s]
-    vh_s = v_conj[:s, :]
-    # Best rank-s approximation svd formula
-    A_s = U_s @ np.diag(Sigma_s) @ vh_s
     
+    U, sigma, Vh = compact_svd(A)
 
-    # Number of entries to store truncated SVD
-    entries = s * (A.shape[0] + A.shape[1] + 1)
+    if s < 1 or s > len(sigma):
+        raise ValueError("s must be between 1 and the rank of A.")
+    U_s = U[:, :s]
+    Sigma_s = np.diag(sigma[:s])
+    Vh_s = Vh[:s, :]
+
+   
+    A_s = U_s @ Sigma_s @ Vh_s
+
+    
+    m, n = A.shape
+    entries = s * (m + n + 1)
 
     return A_s, entries
 
@@ -128,17 +142,17 @@ def lowest_rank_approx(A, err):
 
     u, sigma, v = compact_svd(A)
 
-    if err <= sigma[-1]: #the value of thei index that is smaller than the error
+    if err <= sigma[-1]:
         raise ValueError("error is too small")
     
     # find smallest s such that sigma s+1 < err
 
-    s = np.argmax(sigma < err)
-    #compute the rank-s approx
-    A_s, entries = svd_approx(A, s)
+    
+    idx_list = np.where(sigma < err)[0]
+    s = idx_list[0]   
+    
 
- 
-    return A_s, entries
+    return svd_approx(A, s)
 
 
 
@@ -158,7 +172,7 @@ def compress_image(filename, s):
     #grey
     image = imread(filename) / 255
     if image.ndim == 2:
-        A_s, entries = lowest_rank_approx(image, s)
+        A_s, entries = svd_approx(image, s)
         compressed = np.clip(A_s, 0, 1)
     #color problems baby
     elif image.ndim == 3 and image.shape[2] == 3:
@@ -197,14 +211,20 @@ def compress_image(filename, s):
 
 
 # if __name__ == "__main__":
-#     visualize_svd([[3, 1], [1, 3]])
-#     A = np.array([[3, 1],
-#                     [1, 3]])
-#     err = 2.5
 
-#     A_s, entries = lowest_rank_approx(A, err)
-#     print("A_s:\n", A_s)
-#     print("Entries:", entries)
+#     A = np.random.random((10, 5))
+#     U2, s2, Vh2 = compact_svd(A, tol=1e-12)
 
-    
-#     compress_image('hubble.jpg', 30)
+
+#     print(np.allclose(U2.T @ U2, np.eye(len(s2))))
+#     print(np.allclose(Vh2 @ Vh2.T, np.eye(len(s2))))
+
+
+#     print(np.allclose(U2 @ np.diag(s2) @ Vh2, A))
+
+
+#     U, s, Vh = la.svd(A, full_matrices=False)
+#     print(np.allclose(sorted(s2, reverse=True), sorted(s, reverse=True)))
+
+
+#     print(np.linalg.matrix_rank(A) == len(s2))
