@@ -16,7 +16,7 @@ class Backpack:
     """
 
     # Problem 1: Modify __init__() and put(), and write dump().
-    def __init__(self, name, color, max_size):
+    def __init__(self, name, color, max_size=5):
         """Set the name and initialize an empty list of contents.
 
         Parameters:
